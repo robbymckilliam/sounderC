@@ -4,6 +4,7 @@
     <logicalFolder name="HeaderFiles"
                    displayName="Header Files"
                    projectFiles="true">
+      <itemPath>sounder.h</itemPath>
     </logicalFolder>
     <logicalFolder name="ResourceFiles"
                    displayName="Resource Files"
@@ -12,16 +13,23 @@
     <logicalFolder name="SourceFiles"
                    displayName="Source Files"
                    projectFiles="true">
+      <itemPath>sounder.cpp</itemPath>
     </logicalFolder>
     <logicalFolder name="TestFiles"
                    displayName="Test Files"
                    projectFiles="false"
                    kind="TEST_LOGICAL_FOLDER">
-      <logicalFolder name="f1"
-                     displayName="portaudio_sin_test"
+      <logicalFolder name="f2"
+                     displayName="playsamplestest"
                      projectFiles="true"
                      kind="TEST">
-        <itemPath>tests/portaudio_sin_test.c</itemPath>
+        <itemPath>tests/playsamplestest.cpp</itemPath>
+      </logicalFolder>
+      <logicalFolder name="f1"
+                     displayName="port_audio_sine_underflow_test"
+                     projectFiles="true"
+                     kind="TEST">
+        <itemPath>tests/port_audio_sine_underflow_test.cpp</itemPath>
       </logicalFolder>
     </logicalFolder>
     <logicalFolder name="ExternalFiles"
@@ -41,6 +49,9 @@
         <rebuildPropChanged>false</rebuildPropChanged>
       </toolsSet>
       <compileType>
+        <ccTool>
+          <standard>8</standard>
+        </ccTool>
         <archiverTool>
         </archiverTool>
       </compileType>
@@ -55,6 +66,23 @@
         <cTool>
           <incDir>
             <pElem>.</pElem>
+            <pElem>.</pElem>
+          </incDir>
+        </cTool>
+        <ccTool>
+          <incDir>
+            <pElem>.</pElem>
+            <pElem>.</pElem>
+          </incDir>
+        </ccTool>
+        <linkerTool>
+          <output>${TESTDIR}/TestFiles/f1</output>
+        </linkerTool>
+      </folder>
+      <folder path="TestFiles/f2">
+        <cTool>
+          <incDir>
+            <pElem>.</pElem>
           </incDir>
         </cTool>
         <ccTool>
@@ -63,10 +91,19 @@
           </incDir>
         </ccTool>
         <linkerTool>
-          <output>${TESTDIR}/TestFiles/f1</output>
+          <output>${TESTDIR}/TestFiles/f2</output>
         </linkerTool>
       </folder>
-      <item path="tests/portaudio_sin_test.c" ex="false" tool="0" flavor2="0">
+      <item path="sounder.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="sounder.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="tests/playsamplestest.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="tests/port_audio_sine_underflow_test.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
       </item>
     </conf>
     <conf name="Release" type="3">
@@ -96,6 +133,23 @@
         <cTool>
           <incDir>
             <pElem>.</pElem>
+            <pElem>.</pElem>
+          </incDir>
+        </cTool>
+        <ccTool>
+          <incDir>
+            <pElem>.</pElem>
+            <pElem>.</pElem>
+          </incDir>
+        </ccTool>
+        <linkerTool>
+          <output>${TESTDIR}/TestFiles/f1</output>
+        </linkerTool>
+      </folder>
+      <folder path="TestFiles/f2">
+        <cTool>
+          <incDir>
+            <pElem>.</pElem>
           </incDir>
         </cTool>
         <ccTool>
@@ -104,10 +158,19 @@
           </incDir>
         </ccTool>
         <linkerTool>
-          <output>${TESTDIR}/TestFiles/f1</output>
+          <output>${TESTDIR}/TestFiles/f2</output>
         </linkerTool>
       </folder>
-      <item path="tests/portaudio_sin_test.c" ex="false" tool="0" flavor2="0">
+      <item path="sounder.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="sounder.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="tests/playsamplestest.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="tests/port_audio_sine_underflow_test.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
       </item>
     </conf>
   </confs>
