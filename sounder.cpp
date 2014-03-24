@@ -5,33 +5,43 @@
 #include "sounder.h"
 
 namespace sounder {
+        
+    /** 
+     * The number of sample per buffer.  Set to 2048, which at CD quality (44100Hz) sampling 
+     * (the default) corresponds to approximately 46 milliseconds.  This will approximately be
+     * the delay for audio.  Not a problem for anything I'm currently doing.
+     */
+    static constexpr int buffer_size = 2048;
     
-/** Holds a stero left, right pair */
+    /// Holds a stero left, right pair
     struct stereoSample {
         const double left;
         const double right;
         stereoSample(const double l, const double r) : left(l), right(r) { };
     };
 
-    /** Abstract class for returning stero signals */
+    /// Abstract class for returning stero signals 
     class playData {
     public:
+        const int sampleRate;
+        playData(int sampleRate) : sampleRate(sampleRate) {};
         virtual stereoSample nextSample() = 0;
         virtual bool finished() = 0;
     };
 
-    /** Struct for holding a function to play and the current time*/
+    /// Class for holding a function to play and the current time
     class playFunctionData : public playData {
     public:
         const double stop;
-        const int sampleRate;
+        ///sample period
+        const double T; 
 
-        playFunctionData(const std::function<stereoSample(double)> f, const double start, const double stop, const int sampleRate=44100) : 
-        f(f), t(start), stop(stop), sampleRate(sampleRate) { };
+        playFunctionData(const std::function<stereoSample(double)> fleft, const double start, const double stop, const int sampleRate) : 
+        f(fleft), t(start), stop(stop), T(1.0/sampleRate), playData(sampleRate) { };
         
         virtual stereoSample nextSample() {
             if( finished() ) return stereoSample(0.0,0.0);
-            t += sampleRate;
+            t += T;
             return f(t - sampleRate);
         };
         
@@ -42,11 +52,12 @@ namespace sounder {
         double t;
     };
 
-/** Struct contains iterators to sampled audio data*/
+    /// Class contains iterators to sampled audio data
     class playSamplesData : public playData {
     public:
 
-        playSamplesData(const std::vector<stereoSample>& f) : current(f.begin()), end(f.end()) {}
+        playSamplesData(const std::vector<stereoSample>& f, const int sampleRate) : 
+        current(f.begin()), end(f.end()), playData(sampleRate) { };
 
         virtual stereoSample nextSample() {
             if (finished()) return stereoSample(0.0, 0.0);
@@ -80,15 +91,16 @@ static int playCallback( const void *inputBuffer, void *outputBuffer,
         *out++ = s.left;  /* left */
         *out++ = s.right;  /* right */
      }
-    return data->finished();
+    return data->finished() ? paComplete : paContinue;
 }
 
 static void throwerror(std::string e){
     Pa_Terminate();
     throw e;
 }
-  
-void playStereoSamples(const std::vector<stereoSample>& f, const int sampleRate) {
+
+/** Plays stereo data out the speakers */
+void playStereoData(playData* d) {
     if( paNoError != Pa_Initialize() ) throwerror("Port audio fail to initialise."); //initialise port audio
     
     //setup port audio output device
@@ -100,25 +112,21 @@ void playStereoSamples(const std::vector<stereoSample>& f, const int sampleRate)
     outputParameters.suggestedLatency = Pa_GetDeviceInfo( outputParameters.device )->defaultLowOutputLatency;
     outputParameters.hostApiSpecificStreamInfo = NULL;
     
-    //struct containing iterators to samples to play
-    playSamplesData data(f);
-    
     PaStream *stream;
     Pa_OpenStream(
               &stream,
               NULL, /* no input */
               &outputParameters,
-              sampleRate,
-              paFramesPerBufferUnspecified,
+              d->sampleRate,
+              buffer_size,
               paClipOff,      /* we won't output out of range samples so don't bother clipping them */
               playCallback,
-              &data );
+              d );
     
     if(paNoError != Pa_StartStream(stream) ) throwerror("Port audio stream failed to start.");
     
-    //sleep for a sufficient time for all audio to finish (half a second added to ensure this)
-    double duration = (f.size()/sampleRate + 0.5);
-    Pa_Sleep( 1000 * duration);
+    //sleep until stream is finished (200 millisecond delay)
+    while( Pa_IsStreamActive( stream ) ) Pa_Sleep(200);
     
     if(paNoError != Pa_StopStream(stream) ) throwerror("Port audio stream failed to stop.");
    
@@ -133,11 +141,24 @@ void playSamples(const std::vector<double>& fleft, const std::vector<double>& fr
     std::vector<stereoSample> f;
     f.reserve(N);
     for(int n = 0; n < N; n++) f.push_back(stereoSample(fleft[n], fright[n]));
-    playStereoSamples(f,sampleRate);
+    playData* pd= new playSamplesData(f,sampleRate);
+    playStereoData(pd);
+    delete pd;
 }
 
 void playSamples(const std::vector<double>& f, const int sampleRate) {
     playSamples(f,f,sampleRate);
+}
+
+void play(const std::function<double(double)> fleft, const std::function<double(double)> fright, const double start, const double stop, const int sampleRate){
+    auto f = [fleft, fright] (double t) { return stereoSample(fleft(t), fright(t)); };
+    playFunctionData* pd = new playFunctionData(f, start, stop, sampleRate);
+    playStereoData(pd);
+    delete pd;
+}
+
+void play(const std::function<double(double)> f, const double start, const double stop, const int sampleRate){
+    play(f,f,start,stop,sampleRate);
 }
 
 }
