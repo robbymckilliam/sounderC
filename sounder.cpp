@@ -125,7 +125,7 @@ void playStereoData(playData* d) {
     
     if(paNoError != Pa_StartStream(stream) ) throwerror("Port audio stream failed to start.");
     
-    //sleep until stream is finished (200 millisecond delay)
+    //sleep until stream is finished (up to 200 millisecond delay at end)
     while( Pa_IsStreamActive( stream ) ) Pa_Sleep(200);
     
     if(paNoError != Pa_StopStream(stream) ) throwerror("Port audio stream failed to stop.");
