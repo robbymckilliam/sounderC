@@ -73,8 +73,8 @@ ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/libsounderc.a: ${OBJECTFILES}
 
 ${OBJECTDIR}/sounder.o: sounder.cpp 
 	${MKDIR} -p ${OBJECTDIR}
-	${RM} "$@.d"
-	$(COMPILE.cc) -O2 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/sounder.o sounder.cpp
+	${RM} $@.d
+	$(COMPILE.cc) -O2 -std=c++11 -MMD -MP -MF $@.d -o ${OBJECTDIR}/sounder.o sounder.cpp
 
 # Subprojects
 .build-subprojects:
@@ -83,23 +83,23 @@ ${OBJECTDIR}/sounder.o: sounder.cpp
 .build-tests-conf: .build-conf ${TESTFILES}
 ${TESTDIR}/TestFiles/f2: ${TESTDIR}/tests/playsamplestest.o ${OBJECTFILES:%.o=%_nomain.o}
 	${MKDIR} -p ${TESTDIR}/TestFiles
-	${LINK.cc}   -o ${TESTDIR}/TestFiles/f2 $^ ${LDLIBSOPTIONS} 
+	${LINK.cc}   -o ${TESTDIR}/TestFiles/f2 $^ ${LDLIBSOPTIONS} -lportaudio -lm 
 
 ${TESTDIR}/TestFiles/f1: ${TESTDIR}/tests/port_audio_sine_underflow_test.o ${OBJECTFILES:%.o=%_nomain.o}
 	${MKDIR} -p ${TESTDIR}/TestFiles
-	${LINK.cc}   -o ${TESTDIR}/TestFiles/f1 $^ ${LDLIBSOPTIONS} 
+	${LINK.cc}   -o ${TESTDIR}/TestFiles/f1 $^ ${LDLIBSOPTIONS} -lportaudio -lm 
 
 
 ${TESTDIR}/tests/playsamplestest.o: tests/playsamplestest.cpp 
 	${MKDIR} -p ${TESTDIR}/tests
-	${RM} "$@.d"
-	$(COMPILE.cc) -O2 -I. -MMD -MP -MF "$@.d" -o ${TESTDIR}/tests/playsamplestest.o tests/playsamplestest.cpp
+	${RM} $@.d
+	$(COMPILE.cc) -O2 -I. -std=c++11 -MMD -MP -MF $@.d -o ${TESTDIR}/tests/playsamplestest.o tests/playsamplestest.cpp
 
 
 ${TESTDIR}/tests/port_audio_sine_underflow_test.o: tests/port_audio_sine_underflow_test.cpp 
 	${MKDIR} -p ${TESTDIR}/tests
-	${RM} "$@.d"
-	$(COMPILE.cc) -O2 -I. -I. -MMD -MP -MF "$@.d" -o ${TESTDIR}/tests/port_audio_sine_underflow_test.o tests/port_audio_sine_underflow_test.cpp
+	${RM} $@.d
+	$(COMPILE.cc) -O2 -I. -I. -std=c++11 -MMD -MP -MF $@.d -o ${TESTDIR}/tests/port_audio_sine_underflow_test.o tests/port_audio_sine_underflow_test.cpp
 
 
 ${OBJECTDIR}/sounder_nomain.o: ${OBJECTDIR}/sounder.o sounder.cpp 
@@ -109,8 +109,8 @@ ${OBJECTDIR}/sounder_nomain.o: ${OBJECTDIR}/sounder.o sounder.cpp
 	   (echo "$$NMOUTPUT" | ${GREP} 'T main$$') || \
 	   (echo "$$NMOUTPUT" | ${GREP} 'T _main$$'); \
 	then  \
-	    ${RM} "$@.d";\
-	    $(COMPILE.cc) -O2 -Dmain=__nomain -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/sounder_nomain.o sounder.cpp;\
+	    ${RM} $@.d;\
+	    $(COMPILE.cc) -O2 -std=c++11 -Dmain=__nomain -MMD -MP -MF $@.d -o ${OBJECTDIR}/sounder_nomain.o sounder.cpp;\
 	else  \
 	    ${CP} ${OBJECTDIR}/sounder.o ${OBJECTDIR}/sounder_nomain.o;\
 	fi
