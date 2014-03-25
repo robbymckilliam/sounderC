@@ -39,12 +39,12 @@ bool testPlaySamplesStereo() {
     cout << endl;
     for (int hz : freqs) {
         const auto fl = [hz] (double t) { return sin(hz * 2 * pi * t); };
-        const auto fr = [hz] (double t) { return sin((hz+100) * 2* pi * t); };
+        const auto fr = [hz] (double t) { return sin((2*hz) * 2* pi * t); };
         vector<double> yl;
         for (int n = 0; n < numsamples; n++) yl.push_back(fl(n * T));
         vector<double> yr;
         for (int n = 0; n < numsamples; n++) yr.push_back(fr(n * T));
-        cout << "Playing a " << hz << "Hz sinusoid on left and " << (hz + 100) << "Hz sinusoid on right" << endl;
+        cout << "Playing a " << hz << "Hz sinusoid on left and " << (2*hz) << "Hz sinusoid on right" << endl;
         playSamples(yl, yr, sampleRate);
     }
     cout << " ... ";
@@ -68,11 +68,18 @@ bool testPlayFunctionStereo() {
     cout << endl;
     for (int hz : freqs) {
         auto fl = [hz] (double t) { return sin(hz * 2 * pi * t); };
-        auto fr = [hz] (double t) { return sin((hz+100) * 2 * pi * t); };
-        cout << "Playing a " << hz << "Hz sinusoid on left and " << (hz + 100) << "Hz sinusoid on right" << endl;
+        auto fr = [hz] (double t) { return sin((2*hz) * 2 * pi * t); };
+        cout << "Playing a " << hz << "Hz sinusoid on left and " << (2*hz) << "Hz sinusoid on right" << endl;
         play(fl, fr, start, stop, sampleRate);
     }
     cout << " ... ";
+    return true;
+}
+
+bool testPlayShepardTone() {
+    const double start = 0.0, stop = 10.0;
+    auto f = [] (double t) { return util::shepard(t); };
+    play(f, start, stop, sampleRate);
     return true;
 }
 
@@ -87,6 +94,7 @@ int main(int argc, char** argv) {
     runtest("Playing function mono", testPlayFunctionMono);
     runtest("Playing sample stereo", testPlaySamplesStereo);
     runtest("Playing function stereo", testPlaySamplesStereo);
+    runtest("Playing a shepard tone for 10 seconds", testPlayShepardTone);
     return (EXIT_SUCCESS);
 }
 
