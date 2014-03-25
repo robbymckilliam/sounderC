@@ -17,8 +17,7 @@ namespace sounder {
     struct stereoSample {
         const double left;
         const double right;
-        stereoSample(const double l, const double r) : left(l), right(r) {
-        };
+        stereoSample(const double l, const double r) : left(l), right(r) { };
     };
 
     /// Abstract class for returning stereo signals 
