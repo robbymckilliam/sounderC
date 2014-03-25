@@ -14,7 +14,6 @@ namespace sounder {
     static constexpr int buffer_size = 2048;
 
     /// Holds a stero left, right pair
-
     struct stereoSample {
         const double left;
         const double right;
@@ -22,8 +21,7 @@ namespace sounder {
         };
     };
 
-    /// Abstract class for returning stero signals 
-
+    /// Abstract class for returning stereo signals 
     class playData {
     public:
         const int sampleRate;
@@ -33,7 +31,6 @@ namespace sounder {
     };
 
     /// Class for holding a function to play and the current time
-
     class playFunctionData : public playData {
     public:
         const double stop;
@@ -57,7 +54,6 @@ namespace sounder {
     };
 
     /// Class contains iterators to sampled audio data
-
     class playSamplesData : public playData {
     public:
 

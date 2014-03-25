@@ -51,7 +51,7 @@ namespace sounder {
      * Buffer underrun will likely occur. You can use the function play to alleviate this problem at 
      * the expense of memory.
      */
-    void playUnbuffered(const std::function<double(double) > fleft, const std::function<double(double) > fright, const double start, const double stop, const int sampleRate = 44100);
+    void playUnbuffered(const std::function<double(double)> fleft, const std::function<double(double) > fright, const double start, const double stop, const int sampleRate = 44100);
 
     /** 
      * Plays the function f from time start to time stop out of the speakers.  Optional arguments are 
@@ -60,7 +60,7 @@ namespace sounder {
      * Buffer underrun will likely occur. You can use the function play to alleviate this problem at 
      * the expense of memory
      */
-    void playUnbuffered(const std::function<double(double) > f, const double start, const double stop, const int sampleRate = 44100);
+    void playUnbuffered(const std::function<double(double)> f, const double start, const double stop, const int sampleRate = 44100);
 
 
     namespace util {
@@ -81,7 +81,7 @@ namespace sounder {
          * Record samples of a function into a buffer of std::vector<double> from time start to
          * time stop and a given sample rate.
          */
-        std::vector<double> buffer(const std::function<double(double) > f, const double start, const double stop, const int sampleRate);
+        std::vector<double> buffer(const std::function<double(double)> f, const double start, const double stop, const int sampleRate);
 
     }
 
