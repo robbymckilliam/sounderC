@@ -25,6 +25,12 @@
                      kind="TEST">
         <itemPath>tests/playsamplestest.cpp</itemPath>
       </logicalFolder>
+      <logicalFolder name="f3"
+                     displayName="port_audio_record"
+                     projectFiles="true"
+                     kind="TEST">
+        <itemPath>tests/port_audio_record.c</itemPath>
+      </logicalFolder>
       <logicalFolder name="f1"
                      displayName="port_audio_sine_underflow_test"
                      projectFiles="true"
@@ -94,11 +100,28 @@
           <output>${TESTDIR}/TestFiles/f2</output>
         </linkerTool>
       </folder>
+      <folder path="TestFiles/f3">
+        <cTool>
+          <incDir>
+            <pElem>.</pElem>
+          </incDir>
+        </cTool>
+        <ccTool>
+          <incDir>
+            <pElem>.</pElem>
+          </incDir>
+        </ccTool>
+        <linkerTool>
+          <output>${TESTDIR}/TestFiles/f3</output>
+        </linkerTool>
+      </folder>
       <item path="sounder.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="sounder.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="tests/playsamplestest.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="tests/port_audio_record.c" ex="false" tool="0" flavor2="0">
       </item>
       <item path="tests/port_audio_sine_underflow_test.cpp"
             ex="false"
@@ -169,11 +192,28 @@
           <output>${TESTDIR}/TestFiles/f2</output>
         </linkerTool>
       </folder>
+      <folder path="TestFiles/f3">
+        <cTool>
+          <incDir>
+            <pElem>.</pElem>
+          </incDir>
+        </cTool>
+        <ccTool>
+          <incDir>
+            <pElem>.</pElem>
+          </incDir>
+        </ccTool>
+        <linkerTool>
+          <output>${TESTDIR}/TestFiles/f3</output>
+        </linkerTool>
+      </folder>
       <item path="sounder.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="sounder.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="tests/playsamplestest.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="tests/port_audio_record.c" ex="false" tool="0" flavor2="0">
       </item>
       <item path="tests/port_audio_sine_underflow_test.cpp"
             ex="false"
