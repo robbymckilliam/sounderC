@@ -149,13 +149,13 @@ namespace sounder {
     }
 
     void play(const std::function<double(double) > fleft, const std::function<double(double) > fright, const double start, const double stop, const int sampleRate) {
-        std::vector<double> fl = util::buffer(fleft, start, stop, sampleRate);
-        std::vector<double> fr = util::buffer(fright, start, stop, sampleRate);
+        std::vector<double> fl(util::buffer(fleft, start, stop, sampleRate));
+        std::vector<double> fr(util::buffer(fright, start, stop, sampleRate));
         playSamples(fl, fr, sampleRate);
     }
 
     void play(const std::function<double(double) > f, const double start, const double stop, const int sampleRate) {
-        std::vector<double> f_ = util::buffer(f, start, stop, sampleRate);
+        std::vector<double> f_(util::buffer(f, start, stop, sampleRate));
         playSamples(f_, sampleRate);
     }
 
@@ -175,7 +175,7 @@ namespace sounder {
         playStereoData(pd);
         delete pd;
     }
-
+    
     namespace util {
 
         double fracpart(double t) {
