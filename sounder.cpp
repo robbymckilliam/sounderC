@@ -184,7 +184,7 @@ namespace sounder {
 
         double shepard(double t, double f0, double R, double h) {
             double B = R; //kernel bandwidth, how fast the high and low frequencies are attenuated (fixed to R)
-            auto s = [ = ] (double t_){return exp(-t_ * t_ / B) * sin(2 * pi * f0 * pow(2, -t_ / R) * t_) / sqrt(pi * B);}; //chirp pulse
+            auto s = [=] (double t_){ return exp(-t_ * t_ / B) * sin(2 * pi * f0 * pow(2, -t_ / R) * t_) / sqrt(pi * B); }; //chirp pulse
             double T = R*h; //period
             int kmin = (int) floor(-10 * B / T); //sum out to 10 standard deviations in positive and negative direction
             int kmax = (int) ceil(10 * B / T);

@@ -43,6 +43,7 @@ TESTDIR=${CND_BUILDDIR}/${CND_CONF}/${CND_PLATFORM}/tests
 # Test Files
 TESTFILES= \
 	${TESTDIR}/TestFiles/f2 \
+	${TESTDIR}/TestFiles/f3 \
 	${TESTDIR}/TestFiles/f1
 
 # C Compiler Flags
@@ -85,6 +86,10 @@ ${TESTDIR}/TestFiles/f2: ${TESTDIR}/tests/playsamplestest.o ${OBJECTFILES:%.o=%_
 	${MKDIR} -p ${TESTDIR}/TestFiles
 	${LINK.cc}   -o ${TESTDIR}/TestFiles/f2 $^ ${LDLIBSOPTIONS} -lportaudio -lm 
 
+${TESTDIR}/TestFiles/f3: ${TESTDIR}/tests/port_audio_record.o ${OBJECTFILES:%.o=%_nomain.o}
+	${MKDIR} -p ${TESTDIR}/TestFiles
+	${LINK.cc}   -o ${TESTDIR}/TestFiles/f3 $^ ${LDLIBSOPTIONS} -lportaudio -lm 
+
 ${TESTDIR}/TestFiles/f1: ${TESTDIR}/tests/port_audio_sine_underflow_test.o ${OBJECTFILES:%.o=%_nomain.o}
 	${MKDIR} -p ${TESTDIR}/TestFiles
 	${LINK.cc}   -o ${TESTDIR}/TestFiles/f1 $^ ${LDLIBSOPTIONS} -lportaudio -lm 
@@ -94,6 +99,12 @@ ${TESTDIR}/tests/playsamplestest.o: tests/playsamplestest.cpp
 	${MKDIR} -p ${TESTDIR}/tests
 	${RM} "$@.d"
 	$(COMPILE.cc) -g -I. -std=c++11 -MMD -MP -MF "$@.d" -o ${TESTDIR}/tests/playsamplestest.o tests/playsamplestest.cpp
+
+
+${TESTDIR}/tests/port_audio_record.o: tests/port_audio_record.c 
+	${MKDIR} -p ${TESTDIR}/tests
+	${RM} "$@.d"
+	$(COMPILE.c) -g -I. -MMD -MP -MF "$@.d" -o ${TESTDIR}/tests/port_audio_record.o tests/port_audio_record.c
 
 
 ${TESTDIR}/tests/port_audio_sine_underflow_test.o: tests/port_audio_sine_underflow_test.cpp 
@@ -120,6 +131,7 @@ ${OBJECTDIR}/sounder_nomain.o: ${OBJECTDIR}/sounder.o sounder.cpp
 	@if [ "${TEST}" = "" ]; \
 	then  \
 	    ${TESTDIR}/TestFiles/f2 || true; \
+	    ${TESTDIR}/TestFiles/f3 || true; \
 	    ${TESTDIR}/TestFiles/f1 || true; \
 	else  \
 	    ./${TEST} || true; \

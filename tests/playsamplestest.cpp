@@ -1,6 +1,6 @@
 /* 
  * File:   playsamplestest.cpp
- * Author: harprobey
+ * Author: Robby McKilliam
  *
  * Created on 22/03/2014, 4:13:04 PM
  */
@@ -18,40 +18,7 @@ const int sampleRate = 44100;
 const double T = 1.0/sampleRate; //the sampling period
 const std::vector<int> freqs = {100, 200, 500, 1000, 2000};
 
-bool testPlaySamplesMono() {
-    const double duration = 2.0; //two seconds
-    const int numsamples = (int) floor(sampleRate * duration);
-    cout << endl;
-    for (int hz : freqs) {
-        const auto f = [hz] (double t) { return sin(hz * 2 * pi * t); };
-        vector<double> y;
-        for (int n = 0; n < numsamples; n++) y.push_back(f(n * T));
-        cout << "Playing a " << hz << "Hz sinusoid" << endl;
-        playSamples(y, sampleRate);
-    }
-    cout << " ... ";
-    return true;
-}
-
-bool testPlaySamplesStereo() {
-    const double duration = 2.0; //two seconds
-    const int numsamples = (int) floor(sampleRate * duration);
-    cout << endl;
-    for (int hz : freqs) {
-        const auto fl = [hz] (double t) { return sin(hz * 2 * pi * t); };
-        const auto fr = [hz] (double t) { return sin((2*hz) * 2* pi * t); };
-        vector<double> yl;
-        for (int n = 0; n < numsamples; n++) yl.push_back(fl(n * T));
-        vector<double> yr;
-        for (int n = 0; n < numsamples; n++) yr.push_back(fr(n * T));
-        cout << "Playing a " << hz << "Hz sinusoid on left and " << (2*hz) << "Hz sinusoid on right" << endl;
-        playSamples(yl, yr, sampleRate);
-    }
-    cout << " ... ";
-    return true;
-}
-
-bool testPlayFunctionMono() {
+bool testPlayMono() {
     const double start = 0.0, stop = 2.0;
     cout << endl;
     for (int hz : freqs) {
@@ -63,7 +30,7 @@ bool testPlayFunctionMono() {
     return true;
 }
 
-bool testPlayFunctionStereo() {
+bool testPlayStereo() {
     const double start = 0.0, stop = 2.0;
     cout << endl;
     for (int hz : freqs) {
@@ -71,6 +38,31 @@ bool testPlayFunctionStereo() {
         auto fr = [hz] (double t) { return sin((2*hz) * 2 * pi * t); };
         cout << "Playing a " << hz << "Hz sinusoid on left and " << (2*hz) << "Hz sinusoid on right" << endl;
         play(fl, fr, start, stop, sampleRate);
+    }
+    cout << " ... ";
+    return true;
+}
+
+bool testPlayUnbufferedMono() {
+    const double start = 0.0, stop = 2.0;
+    cout << endl;
+    for (int hz : freqs) {
+        auto f = [hz] (double t) { return sin(hz * 2 * pi * t); };
+        cout << "Playing a " << hz << "Hz sinusoid" << endl;
+        playUnbuffered(f, start, stop, sampleRate);
+    }
+    cout << " ... ";
+    return true;
+}
+
+bool testPlayUnbufferedStereo() {
+    const double start = 0.0, stop = 2.0;
+    cout << endl;
+    for (int hz : freqs) {
+        auto fl = [hz] (double t) { return sin(hz * 2 * pi * t); };
+        auto fr = [hz] (double t) { return sin((2*hz) * 2 * pi * t); };
+        cout << "Playing a " << hz << "Hz sinusoid on left and " << (2*hz) << "Hz sinusoid on right" << endl;
+        playUnbuffered(fl, fr, start, stop, sampleRate);
     }
     cout << " ... ";
     return true;
@@ -90,10 +82,10 @@ void runtest(string name, function<bool()> test) {
 }
 
 int main(int argc, char** argv) {
-    runtest("Playing sample mono", testPlaySamplesMono);
-    runtest("Playing function mono", testPlayFunctionMono);
-    runtest("Playing sample stereo", testPlaySamplesStereo);
-    runtest("Playing function stereo", testPlaySamplesStereo);
+    runtest("Playing mono", testPlayMono);
+    runtest("Playing stereo", testPlayStereo);
+    runtest("Playing unbuffered mono", testPlayUnbufferedMono);
+    runtest("Playing unbuffered stereo", testPlayUnbufferedStereo);
     runtest("Playing a shepard tone for 10 seconds", testPlayShepardTone);
     return (EXIT_SUCCESS);
 }
