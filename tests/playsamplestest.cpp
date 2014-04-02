@@ -16,10 +16,10 @@ using namespace sounder;
 
 const int sampleRate = 44100;
 const double T = 1.0/sampleRate; //the sampling period
-const std::vector<int> freqs = {100, 200, 500, 1000, 2000};
+const std::vector<int> freqs = {100, 200, 500, 1000};
 
 bool testPlayMono() {
-    const double start = 0.0, stop = 2.0;
+    const double start = 0.0, stop = 1.0;
     cout << endl;
     for (int hz : freqs) {
         auto f = [hz] (double t) { return sin(hz * 2 * pi * t); };
@@ -31,7 +31,7 @@ bool testPlayMono() {
 }
 
 bool testPlayStereo() {
-    const double start = 0.0, stop = 2.0;
+    const double start = 0.0, stop = 1.0;
     cout << endl;
     for (int hz : freqs) {
         auto fl = [hz] (double t) { return sin(hz * 2 * pi * t); };
@@ -44,7 +44,7 @@ bool testPlayStereo() {
 }
 
 bool testPlayUnbufferedMono() {
-    const double start = 0.0, stop = 2.0;
+    const double start = 0.0, stop = 1.0;
     cout << endl;
     for (int hz : freqs) {
         auto f = [hz] (double t) { return sin(hz * 2 * pi * t); };
@@ -56,7 +56,7 @@ bool testPlayUnbufferedMono() {
 }
 
 bool testPlayUnbufferedStereo() {
-    const double start = 0.0, stop = 2.0;
+    const double start = 0.0, stop = 1.0;
     cout << endl;
     for (int hz : freqs) {
         auto fl = [hz] (double t) { return sin(hz * 2 * pi * t); };
@@ -70,8 +70,15 @@ bool testPlayUnbufferedStereo() {
 
 bool testPlayShepardTone() {
     const double start = 0.0, stop = 10.0;
-    auto f = [] (double t) { return util::shepard(t); };
-    play(f, start, stop, sampleRate);
+    double f0 = 220, R = 15, h = 1.0 / pi; //parameters for Shepard tone
+    double T = R*h; //period of Shepard tone
+    auto shep = [=] (double t) { return util::shepard(t,f0,R,h); };
+    std::vector<double> buf = util::buffer(shep, 0, T, sampleRate); //buffer a single period
+    auto f = [&buf] (double t) { //function retrieves from buffer periodically
+        int i = ((int) floor(t*sampleRate)) % buf.size(); 
+        return buf[i];
+    };
+    playUnbuffered(f, start, stop, sampleRate); //playing Shepard tone directly unbuffered might not be possible depending on your computer.
     return true;
 }
 
