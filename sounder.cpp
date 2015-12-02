@@ -7,7 +7,7 @@
 namespace sounder {
 
     /** 
-     * The number of sample per buffer.  Set to 2048, which at CD quality (44100Hz) sampling 
+     * The number of samples per buffer.  Set to 2048, which at CD quality (44100Hz) sampling 
      * (the default) corresponds to approximately 46 milliseconds.  This will approximately be
      * the delay for audio.  Not a problem for anything I'm currently doing.
      */
@@ -99,7 +99,7 @@ namespace sounder {
 
     /** Plays stereo data out the speakers */
     void playStereoData(playData* d) {
-        if (paNoError != Pa_Initialize()) throwerror("Port audio fail to initialise."); //initialise port audio
+        if (paNoError != Pa_Initialize()) throwerror("Port audio failed to initialise."); //initialise port audio
 
         //setup port audio output device
         PaStreamParameters outputParameters;
